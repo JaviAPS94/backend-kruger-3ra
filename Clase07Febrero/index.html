@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consumo de API</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Datos de la API</h1>
+    <button onclick="fetchData()">Cargar Datos</button>
+    <table id="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Producto</th>
+          <th>Precio</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      async function fetchData() {
+        try {
+          const response = await fetch("http://localhost:8080/sales");
+          const data = await response.json();
+          const tableBody = document.querySelector("#data-table tbody");
+          tableBody.innerHTML = "";
+          data.forEach((sale) => {
+            const row = `<tr>
+                                    <td>${sale.id}</td>
+                                    <td>${sale.product}</td>
+                                    <td>${sale.price}</td>
+                                </tr>`;
+            tableBody.innerHTML += row;
+          });
+        } catch (error) {
+          console.error("Error al obtener los datos:", error);
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+[
+  {
+    "date": "2021-02-07",
+    "product": "Laptop",
+    "price": 1500,
+    "quantity": 1,
+    "id": 1
+  },
+  {
+    "date": "2021-02-07",
+    "product": "Laptop",
+    "price": 1500,
+    "quantity": 1,
+    "id": 2
+  },
+  {
+    "date": "2021-02-07",
+    "product": "Laptop",
+    "price": 1500,
+    "quantity": 1,
+    "id": 3
+  },
+  {
+    "date": "2021-02-07",
+    "product": "Laptop",
+    "price": 1500,
+    "quantity": 1,
+    "id": 4
+  },
+  {
+    "date": "2021-02-07",
+    "product": "Laptop",
+    "price": 1500,
+    "quantity": 1,
+    "id": 5
+  },
+  {
+    "date": "2021-02-07",
+    "product": "Laptop",
+    "price": 1500,
+    "quantity": 1,
+    "id": 6
+  },
+  {
+    "id": 8,
+    "data": "2025-02-08",
+    "product": "Tablet",
+    "price": 500,
+    "quantity": 1
+  },
+  {
+    "date": "2025-02-08",
+    "price": 800,
+    "product": "monitor",
+    "quantity": 2,
+    "id": 9
+  }
+]
