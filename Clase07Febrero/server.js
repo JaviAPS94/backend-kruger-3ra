@@ -3,27 +3,33 @@
 //Vamos a construir servicios web o endpoint para administrar nuestras ventas
 const http = require("http");
 const crudModule = require("./crud");
+const getRawBody = require("raw-body");
 
 //Vamos a definir una funcion para poder procesar el body que nos llega en cada peticion
 //que haga el cliente
 //Util cuando recibimos informacion o datos del cliente o frontend
-const parseBody = (req) => {
-  return new Promise((resolve, reject) => {
-    //Vamos a capturar toda la informacion que llega en el body del request
-    //Para esto vamos a utilizar eventos asociados al request
-    let body = "";
-    //Vamos a conectarnos o escuchar un evento de data
-    req.on("data", (chunk) => {
-      body += chunk.toString();
-    });
-    req.on("end", () => {
-      try {
-        resolve(JSON.parse(body));
-      } catch (error) {
-        reject(error);
-      }
-    });
-  });
+// const parseBody = (req) => {
+//   return new Promise((resolve, reject) => {
+//     //Vamos a capturar toda la informacion que llega en el body del request
+//     //Para esto vamos a utilizar eventos asociados al request
+//     let body = "";
+//     //Vamos a conectarnos o escuchar un evento de data
+//     req.on("data", (chunk) => {
+//       body += chunk.toString();
+//     });
+//     req.on("end", () => {
+//       try {
+//         resolve(JSON.parse(body));
+//       } catch (error) {
+//         reject(error);
+//       }
+//     });
+//   });
+// };
+
+const parseBody = async (req) => {
+  const body = await getRawBody(req);
+  return JSON.parse(body.toString());
 };
 
 //Creamos nuestro servidor http

@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "Barbie",
+    "price": 100,
+    "description": "Barbie doll"
+  },
+  {
+    "id": 2,
+    "name": "Car",
+    "price": 200,
+    "description": "Toy car"
+  }
+]

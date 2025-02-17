@@ -54,5 +54,12 @@
     "product": "monitor",
     "quantity": 2,
     "id": 9
+  },
+  {
+    "date": "2025-02-14",
+    "product": "flores",
+    "price": 1,
+    "quantity": 1,
+    "id": 10
   }
 ]
