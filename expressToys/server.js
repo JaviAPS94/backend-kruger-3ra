@@ -14,6 +14,7 @@
 import express from "express";
 import fs from "fs/promises";
 import Joi from "joi";
+import { v4 as uuidv4 } from "uuid";
 
 const app = express();
 
@@ -29,6 +30,12 @@ const toySchema = Joi.object({
   name: Joi.string().required(),
   price: Joi.number().required(),
   description: Joi.string().required(),
+});
+
+const toyUpdateSchema = Joi.object({
+  name: Joi.string(),
+  price: Joi.number(),
+  description: Joi.string(),
 });
 
 const getToysFromDB = async () => {
@@ -53,7 +60,6 @@ app.get("/toys/:id", async (req, res) => {
   if (!toy) {
     return res.status(404).json({ message: "El jugue no existe" });
   }
-
   res.json(toy);
 });
 
@@ -77,6 +83,52 @@ app.post("/toys", async (req, res) => {
   }
 
   //Vamos a utilizar la generacion de un uuid(string -> DHSDHFHV37785FHJDGJ) para poder asignar un id unico a nuestro juguete
+  const uuid = uuidv4();
+
+  //Vamos a leer todos los juguetes del archivo json
+  const toys = await getToysFromDB();
+  //Vamos a insertar un nuevo juguete a nuestro arreglo
+  toys.push({ id: uuid, ...req.body });
+
+  await fs.writeFile("./db/toys.json", JSON.stringify(toys, null, 2));
+
+  res.status(201).json({ message: "Juguete creado con exito" });
 });
+
+//Vamos a crear un servicio que me permita actualizar un juguete
+//PATCH -> /toys/:id
+app.patch("/toys/:id", async (req, res) => {
+  const { error } = toyUpdateSchema.validate(req.body, { convert: false });
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+
+  //Implementacion del servicio
+  const { id } = req.params;
+  //Vamos a resolver la logica de actualizacion
+  const toys = await getToysFromDB();
+  const toyIndex = toys.findIndex((toy) => toy.id === id);
+  //Si el juegue existe, retornar la posicion del juguete en el arreglo
+  //Si el juguete no existe, retorna -1
+  if (toyIndex === -1) {
+    return res.status(404).json({ message: "El juguete no existe" });
+  }
+
+  //Vamos a actualizar el juguete
+  const toyToUpdate = toys[toyIndex];
+
+  //Vamos a actualizar unicamente los campos que nos envia el front
+  //toyUpdated = { ...toyToUpdate, ...req.body }
+  Object.assign(toyToUpdate, req.body);
+
+  toys[toyIndex] = toyToUpdate;
+
+  await fs.writeFile("./db/toys.json", JSON.stringify(toys, null, 2));
+
+  res.json({ message: "Juguete actualizado con exito" });
+});
+
+//Vamos a crear un servicio que me permita eliminar un juguete
+//splice
 
 app.listen(8080);

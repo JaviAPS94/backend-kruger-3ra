@@ -1,14 +1,8 @@
 [
   {
-    "id": 1,
-    "name": "Barbie",
-    "price": 100,
-    "description": "Barbie doll"
-  },
-  {
-    "id": 2,
-    "name": "Car",
-    "price": 200,
-    "description": "Toy car"
+    "id": "754dd5b6-18bb-43c9-b3f0-074f8219f827",
+    "name": "Superman",
+    "price": 789,
+    "description": "Juegue de superman para niños"
   }
 ]
