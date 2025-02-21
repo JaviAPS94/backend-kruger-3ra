@@ -130,5 +130,23 @@ app.patch("/toys/:id", async (req, res) => {
 
 //Vamos a crear un servicio que me permita eliminar un juguete
 //splice
+app.delete("/api/v1/toys/:id", async (req, res) => {
+  const id = req.params.id;
+  const toys = await getToysFromDB();
+  const toyIndex = toys.findIndex((el) => el.id === id);
+
+  if (toyIndex === -1) {
+    return res.status(404).json({
+      status: "fail",
+      message: "id not exist",
+    });
+  }
+
+  toys.splice(toyIndex, 1);
+
+  await fs.writeFile("./db/toys.json", JSON.stringify(toys));
+
+  res.end();
+});
 
 app.listen(8080);
