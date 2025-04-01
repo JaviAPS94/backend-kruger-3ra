@@ -1,6 +1,7 @@
 import configs from "../configs/configs.js";
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import sendEmail from "../utils/send-email.js";
 
 const register = async (req, res) => {
   try {
@@ -93,6 +94,7 @@ const forgotPassword = async (req, res) => {
 
       res.json({ message: "El link ha sido enviado a tu correo electronico" });
     } catch (error) {
+      console.log(error);
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;
 
