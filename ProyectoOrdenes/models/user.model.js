@@ -1,6 +1,7 @@
 //Vamos a definir el schema de nuestra collecion y el modelo de la misma
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 const userShema = new mongoose.Schema({
   username: {
@@ -80,5 +81,27 @@ userShema.methods.comparePassword = async function (plainPassword) {
 };
 
 //http://localhost:3000/reset-password?TOKEN=HSDHJGFASJ37562385GHJERGHJ
+userShema.methods.generateResetPasswordToken = function () {
+  //Este metodo se va a encargar de setear los dos atributos que forman parte del usuario
+  //El primer atributo es el token
+  //El segundo atributo es la fecha de expiracion del token
+  //Para generar este token vamos a usar crypto -> es una dependencia que nos sirve para hashear cosas
+  //Crypto vs Bcrypt
+  //Crypto es una dependencia mas completa en la cual podemos hashear cosas, utilizando multiples algoritmos
+  //Bcrypt es una depedencia que esta enfocada entrabajar con contraseñas -> optimizada para este fin
+  //Vamos a generar el token de reseteo de password -> Un conjunto de caracteres generados de forma
+  //aleatoria
+  const resetToken = crypto.randomBytes(20).toString("hex");
+  const resetTokenHashed = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  //Vamos a actualizar estos atributos en el usuario
+  this.resetPasswordToken = resetTokenHashed;
+  this.resetPasswordExpire = Date.now() + 60 * 60 * 1000;
+
+  return resetTokenHashed;
+};
 
 export const User = mongoose.model("users", userShema);

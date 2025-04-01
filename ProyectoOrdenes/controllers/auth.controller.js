@@ -61,4 +61,47 @@ const login = async (req, res) => {
   }
 };
 
-export { register, login };
+const forgotPassword = async (req, res) => {
+  //En este servicio el frontnend esta enviando el correo electronnico
+  try {
+    const { email } = req.body;
+    //Ahora con el email vamos a validar si hay un usuario asociado a ese correo electronico
+    //Consular a la BDD el usuario que tenga ese correo
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    //El siguiente paso es generar el token de recuperacion de password
+    //Este token va a ser enviado al correo electronico del usuario
+    //Vamos a definir el tiempo de expiracion de este token
+    //Pero esto no lo vamos a resolver aca, sino va a ser un metodo del modelo del usuario
+    //Este token es el que va a ser enviando DENTRO DEL LINK DE RESETEO DE PASSWORD
+    const resetToken = user.generateResetPasswordToken();
+    await user.save({ validateBeforeSave: false });
+
+    //Crear el enlace para resetear la contraseña
+    const resetUrl = `http://localhost:5174/reset-password/${resetToken}`;
+    const message = `Hola, para resetear tu contraseña por favor haz click en el siguiente enlace: ${resetUrl}`;
+
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: "Recuperacion de contraseña",
+        message,
+      });
+
+      res.json({ message: "El link ha sido enviado a tu correo electronico" });
+    } catch (error) {
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+
+      await user.save({ validateBeforeSave: false });
+      res.status(500).json({ message: "Ocurrio un error al enviar el correo" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export { register, login, forgotPassword };
