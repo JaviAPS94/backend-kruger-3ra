@@ -1,0 +1,15 @@
+{
+  "nombre": "usuario1",
+  "apellido": "apellido",
+  "edad": "edad",
+  "direcciones": [
+    {
+      "id": 1,
+      "calle_principal": "cumbaya 10",
+      "calle_secundaria": "calle_secundaria",
+      "ciudad": "ciudad",
+      "provincia": "provincia",
+      "numeracion": "numeracion"
+    }
+  ]
+}

@@ -106,4 +106,34 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-export { register, login, forgotPassword };
+const resetPassword = async (req, res) => {
+  try {
+    //Este servicio recibe como parametro el token de recuperacion de password
+    const { token } = req.params;
+    //Vamos a recibir la nueva contraseña del usuario dentro del body del request
+    const { password } = req.body;
+    //Primer paso es validar si el token esta asociado a un usuario y si el token no ha expirado
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    //Si no encontramos el usuario, significa que el token no es valido o ya ha expirado
+    if (!user) {
+      return res.status(400).json("Token invalido o expirado");
+    }
+
+    //Si el token es valido, vamos a actualizar la contraseña del usuario
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+    
+    res.json({ message: "Contraseña actualizada con exito" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export { register, login, forgotPassword, resetPassword };
