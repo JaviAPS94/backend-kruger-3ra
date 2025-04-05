@@ -1,3 +1,5 @@
+import { Product } from "../models/product.model.js";
+
 const saveProduct = async (req, res) => {
   try {
     const product = new Product(req.body);
