@@ -1,5 +1,6 @@
 import { Order } from "../models/order.model.js";
 import { Product } from "../models/product.model.js";
+import logger from "../utils/logger.js";
 
 const createOrder = async (req, res) => {
     // {
@@ -54,10 +55,18 @@ const createOrder = async (req, res) => {
 
 const getOrdersByUserId = async (req, res) => {
     try {
+        //logger.silly("entra al metodo getOrdersByUserId - nivel silly")
+        logger.debug("entra al metodo getOrdersByUserId - nivel debug")
+        //logger.verbose("entra al metodo getOrdersByUserId - nivel verbose")
+        //logger.http("entra al metodo getOrdersByUserId - nivel http")
+        logger.info("entra al metodo getOrdersByUserId - nivel info")
+        logger.warning("entra al metodo getOrdersByUserId - nivel warn")
+        logger.error("entra al metodo getOrdersByUserId - nivel error")
         const userId = req.params.userId;
         const orders = await Order.find({user: userId}).populate("products.product");
         res.json(orders)
     } catch (error) {
+        logger.error(error.message)
         res.status(500).json({message: 'Error getting orders'})
     }
 }
